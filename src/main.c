@@ -26,6 +26,5 @@ int main() {
     }
     printf("Starting rendering...\n");
     render(width, height, camera, scene, 3, light_direction, light_color, sphere_color, ambient_color);
-    printf("Rendering complete. Image saved as result.ppm.\n");
     return 0;
 }
