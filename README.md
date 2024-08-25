@@ -17,7 +17,6 @@ Run `make`.
 <img src="assets/lighttotheleftnonoverlapping.jpg" width="400" height="400">
 
 ### Light on the right side, overlapping
-![Light on the right side, overlapping](assets/lighttotherightoverlapping.jpg)
 <img src="assets/lighttotherightoverlapping.jpg" width="400" height="400">
 
 
