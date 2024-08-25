@@ -1,10 +1,14 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <math.h>
+#include <string.h>
+
 #include "rendering.h"
 #include "compute.h"
 #include "output.h"
 #include "sphere.h"
+
+#define ANTIALIASING 1
 
 Color shade(Sphere sphere, Vector3 point, Vector3 normal, Vector3 light_direction, Color light, Color object, Color ambient) {
     Vector3 unit_normal = normalize(normal);
@@ -57,7 +61,12 @@ void renderSingleSphereOnly(int width, int height, Camera camera, Sphere sphere,
             }
         }
     }
-    save_ppm_format(image, width, height);
+    save_ppm_format(image, width, height, "nonfxaa.ppm");
+    if(ANTIALIASING) {
+        printf("Applying anti-aliasing...\n"); 
+        applyFXAA(image, width, height);
+        save_ppm_format(image, width, height, "fxaa.ppm");
+    }
 }
 
 
@@ -87,5 +96,47 @@ void render(int width, int height, Camera camera, Scene scene, int sphere_count,
             
         }
     }
-    save_ppm_format(image, width, height);
+    save_ppm_format(image, width, height, "nonfxaa.ppm");
+    if(ANTIALIASING) {
+        printf("Applying anti-aliasing...\n");
+        applyFXAA(image, width, height);
+        save_ppm_format(image, width, height, "fxaa.ppm");
+    }
+}
+
+void applyFXAA(Color *image, int width, int height) {
+    Color *output = malloc(width * height * sizeof(Color));
+    float threshold = 0.3f;
+    for(int y = 0; y < height; y++) {
+        for(int x = 0; x < width; x++) {
+            Color center = image[y*width + x];
+            if(x == 0 || x == width - 1 || y == 0 || y == height - 1) {
+                output[y*width + x] = center;
+                continue;
+            }
+            Color left = image[y*width + x - 1];
+            Color right = image[y*width + x + 1];
+            Color up = image[(y - 1)*width + x];
+            Color down = image[(y + 1)*width + x];
+            float leftluminance = 0.2126*left.r + 0.7152*left.g + 0.0722*left.b;
+            float rightluminance = 0.2126*right.r + 0.7152*right.g + 0.0722*right.b;
+            float upluminance = 0.2126*up.r + 0.7152*up.g + 0.0722*up.b;
+            float downluminance = 0.2126*down.r + 0.7152*down.g + 0.0722*down.b;
+            float Gx = 0.5f * (rightluminance - leftluminance);
+            float Gy = 0.5f * (upluminance - downluminance);
+            float magnitude = sqrtf(Gx * Gx + Gy * Gy);
+            if(magnitude >= threshold) {
+                Color color = (Color) {
+                    (up.r + right.r + down.r + left.r) / 4.0,
+                    (up.g + right.g + down.g + left.g) / 4.0,
+                    (up.b + right.b + down.b + left.b) / 4.0
+                };
+                output[y*width + x] = color;
+            } else {
+                output[y*width + x] = center;
+            }
+        }
+    };
+    memcpy(image, output, width * height * sizeof(Color));
+    free(output);
 }
