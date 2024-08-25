@@ -11,7 +11,7 @@ Run `make`.
 <img src="assets/forwardfacingnonoverlapping.jpg" width="400" height="400">
 
 ### Light on the right side, non-overlapping
-<img src="assets/lighttotherightoverlapping.jpg" width="400" height="400">
+<img src="assets/lighttotherightnonoverlapping.jpg" width="400" height="400">
 
 ### Light on the left side, non-overlapping
 <img src="assets/lighttotheleftnonoverlapping.jpg" width="400" height="400">
