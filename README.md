@@ -8,15 +8,16 @@ Run `make`.
 
 ## Outputs
 ### Light on the face, non-overlapping
-![Light on the face, non-overlapping](assets/forwardfacingnonoverlapping.jpg)
+<img src="assets/forwardfacingnonoverlapping.jpg" width="400" height="400">
 
 ### Light on the right side, non-overlapping
-![Light on the right side, non-overlapping](assets/lighttotherightnonoverlapping.jpg)
+<img src="assets/lighttotherightoverlapping.jpg" width="400" height="400">
 
 ### Light on the left side, non-overlapping
-![Light on the left side, non-overlapping](assets/lighttotheleftnonoverlapping.jpg)
+<img src="assets/lighttotheleftnonoverlapping.jpg" width="400" height="400">
 
 ### Light on the right side, overlapping
 ![Light on the right side, overlapping](assets/lighttotherightoverlapping.jpg)
+<img src="assets/lighttotherightoverlapping.jpg" width="400" height="400">
 
 
