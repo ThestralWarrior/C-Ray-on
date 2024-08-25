@@ -3,8 +3,8 @@
 
 #include "output.h"
 
-void save_ppm_format(Color *image, int width, int height) {
-    FILE *fptr = fopen("result.ppm", "wb");
+void save_ppm_format(Color *image, int width, int height, char *name) {
+    FILE *fptr = fopen(name, "wb");
     if(fptr == NULL) {
         fprintf(stderr, "Failed to open file.\n");
         exit(2);
@@ -19,4 +19,5 @@ void save_ppm_format(Color *image, int width, int height) {
         fwrite(&b, 1, 1, fptr);
     }
     fclose(fptr);
+    printf("Image generated at %s\n", name);
 }

@@ -3,6 +3,6 @@
 
 #include "structs.h"
 
-void save_ppm_format(Color *image, int width, int height);
+void save_ppm_format(Color *image, int width, int height, char *name);
 
 #endif
