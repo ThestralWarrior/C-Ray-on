@@ -11,15 +11,15 @@ int main() {
     int width = 400;
     int height = 400;
 
-    Color sphere_color = {0.0f, 1.0f, 0.0f};
-    Color light_color = {1.0f, 1.0f, 1.0f};
-    Color ambient_color = {0.3f, 0.3f, 0.3f};
+    Color sphere_color = (Color) {0.0f, 1.0f, 0.0f};
+    Color light_color = (Color) {1.0f, 1.0f, 1.0f};
+    Color ambient_color = (Color) {0.3f, 0.3f, 0.3f};
 
     Camera camera = {{0, 0, 1}, {0, 0, -1}};
 
-    Sphere sphere1 = {{0, 0, -10.0f}, 1};
-    Sphere sphere2 = {{-3, 1, -6.0f}, 1};
-    Sphere sphere3 = {{1, -1, -4.0f}, 1};
+    Sphere sphere1 = {(Vector3){0, 0, -10.0f}, 1};
+    Sphere sphere2 = {(Vector3){-3, 1, -6.0f}, 1};
+    Sphere sphere3 = {(Vector3){1, -1, -4.0f}, 1};
 
     Scene scene = (Scene){
         width,
