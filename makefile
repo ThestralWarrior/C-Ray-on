@@ -1,5 +1,5 @@
 CC = gcc
-CFLAGS = -Iheader
+CFLAGS = -Iheader -fopenmp
 SOURCES = src/main.c src/compute.c src/rendering.c src/output.c src/sphere.c
 OBJECTS = $(SOURCES:src/%.c=obj/%.o)
 TARGET = crayon
@@ -7,7 +7,7 @@ TARGET = crayon
 all: $(TARGET)
 
 $(TARGET): $(OBJECTS)
-	$(CC) -o $@ $(OBJECTS)
+	$(CC) -o $@ $(OBJECTS) -fopenmp
 
 obj/%.o: src/%.c | obj
 	$(CC) $(CFLAGS) -c $< -o $@
