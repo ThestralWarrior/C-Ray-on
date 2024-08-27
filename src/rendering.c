@@ -8,7 +8,7 @@
 #include "output.h"
 #include "sphere.h"
 
-#define ANTIALIASING 1
+#define ANTIALIASING 0
 
 Color shade(Sphere sphere, Vector3 point, Vector3 normal, Vector3 light_direction, Color light, Color object, Color ambient) {
     Vector3 unit_normal = normalize(normal);
@@ -36,41 +36,10 @@ Color shade(Sphere sphere, Vector3 point, Vector3 normal, Vector3 light_directio
     return color;
 }
 
-void renderSingleSphereOnly(int width, int height, Camera camera, Sphere sphere, Vector3 light_direction, Color light, Color object, Color ambient) {
-    Color *image = malloc(width * height * sizeof(Color));
-    if(image == NULL) {
-        fprintf(stderr, "Memory allocation failed.\n");
-        exit(1);
-    }
-    for(int y = 0; y < height; y++) {
-        for(int x = 0; x < width; x++) {
-            float u = (float)x / (width - 1) * 2.0f - 1.0f;
-            float v = 1.0f - (float)y / (height - 1) * 2.0f;
-            Ray ray;
-            ray.origin = camera.position;
-            ray.direction = normalize((Vector3){u, v, -1.0f});
-            float t1, t2;
-            if(intersect_ray_sphere(ray, sphere, &t1, &t2)) {
-                float t = t1 < t2 ? t1 : t2;
-                Vector3 intersection = add(ray.origin, scale(ray.direction, t));
-                Vector3 normal = normalize(sub(intersection, sphere.center));
-                Color color = shade(sphere, intersection, normal, light_direction, light, object, ambient);
-                image[y * width + x] = color;
-            } else {
-                image[y * width + x] = (Color) {0.5294f, 0.8078f, 0.9216f};
-            }
-        }
-    }
-    save_ppm_format(image, width, height, "nonfxaa.ppm");
-    if(ANTIALIASING) {
-        printf("Applying anti-aliasing...\n"); 
-        applyFXAA(image, width, height);
-        save_ppm_format(image, width, height, "fxaa.ppm");
-    }
-}
-
-
-void render(int width, int height, Camera camera, Scene scene, int sphere_count, Vector3 light_direction, Color light, Color object, Color ambient) {
+void render(Scene scene, int sphere_count, Vector3 light_direction, Color light, Color object, Color ambient) {
+    Camera camera = *(scene.camera);
+    int width = scene.width;
+    int height = scene.height;
     Color *image = malloc(width * height * sizeof(Color));
     if(image == NULL) {
         fprintf(stderr, "Memory allocation failed.\n");
@@ -140,3 +109,38 @@ void applyFXAA(Color *image, int width, int height) {
     memcpy(image, output, width * height * sizeof(Color));
     free(output);
 }
+
+
+
+// void renderSingleSphereOnly(int width, int height, Camera camera, Sphere sphere, Vector3 light_direction, Color light, Color object, Color ambient) {
+//     Color *image = malloc(width * height * sizeof(Color));
+//     if(image == NULL) {
+//         fprintf(stderr, "Memory allocation failed.\n");
+//         exit(1);
+//     }
+//     for(int y = 0; y < height; y++) {
+//         for(int x = 0; x < width; x++) {
+//             float u = (float)x / (width - 1) * 2.0f - 1.0f;
+//             float v = 1.0f - (float)y / (height - 1) * 2.0f;
+//             Ray ray;
+//             ray.origin = camera.position;
+//             ray.direction = normalize((Vector3){u, v, -1.0f});
+//             float t1, t2;
+//             if(intersect_ray_sphere(ray, sphere, &t1, &t2)) {
+//                 float t = t1 < t2 ? t1 : t2;
+//                 Vector3 intersection = add(ray.origin, scale(ray.direction, t));
+//                 Vector3 normal = normalize(sub(intersection, sphere.center));
+//                 Color color = shade(sphere, intersection, normal, light_direction, light, object, ambient);
+//                 image[y * width + x] = color;
+//             } else {
+//                 image[y * width + x] = (Color) {0.5294f, 0.8078f, 0.9216f};
+//             }
+//         }
+//     }
+//     save_ppm_format(image, width, height, "nonfxaa.ppm");
+//     if(ANTIALIASING) {
+//         printf("Applying anti-aliasing...\n"); 
+//         applyFXAA(image, width, height);
+//         save_ppm_format(image, width, height, "fxaa.ppm");
+//     }
+// }
