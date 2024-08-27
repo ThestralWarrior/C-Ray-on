@@ -71,6 +71,7 @@ void render(Scene scene, int sphere_count, Vector3 light_direction, Color light,
         applyFXAA(image, width, height);
         save_ppm_format(image, width, height, "fxaa.ppm");
     }
+    free(image);
 }
 
 void applyFXAA(Color *image, int width, int height) {
