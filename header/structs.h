@@ -11,13 +11,13 @@ typedef struct {
 } Ray;
 
 typedef struct {
+    float r, g, b;
+} Color;
+
+typedef struct {
     Vector3 center;
     float radius;
 } Sphere;
-
-typedef struct {
-    float r, g, b;
-} Color;
 
 typedef struct {
     Vector3 position;
@@ -25,7 +25,10 @@ typedef struct {
 } Camera;
 
 typedef struct {
-    Sphere* spheres;
+    int width;
+    int height;
+    Sphere *spheres;
+    Camera* camera;
 } Scene;
 
 #endif
