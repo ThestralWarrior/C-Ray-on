@@ -14,10 +14,13 @@ typedef struct {
     float r, g, b;
 } Color;
 
+#pragma pack(1)
 typedef struct {
     Vector3 center;
     float radius;
+    Color color;
 } Sphere;
+#pragma pack()
 
 typedef struct {
     Vector3 position;

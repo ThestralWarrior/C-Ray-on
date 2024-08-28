@@ -8,7 +8,7 @@
 #include "output.h"
 #include "sphere.h"
 
-#define ANTIALIASING 0
+#define ANTIALIASING 1
 
 Color shade(Sphere sphere, Vector3 point, Vector3 normal, Vector3 light_direction, Color light, Color object, Color ambient) {
     Vector3 unit_normal = normalize(normal);
@@ -36,11 +36,12 @@ Color shade(Sphere sphere, Vector3 point, Vector3 normal, Vector3 light_directio
     return color;
 }
 
-void render(Scene scene, int sphere_count, Vector3 light_direction, Color light, Color object, Color ambient) {
+void render(Scene scene, int sphere_count, Vector3 light_direction, Color light, Color ambient) {
     Camera camera = *(scene.camera);
     int width = scene.width;
     int height = scene.height;
     Color *image = malloc(width * height * sizeof(Color));
+    Sphere *spheres = scene.spheres; 
     if(image == NULL) {
         fprintf(stderr, "Memory allocation failed.\n");
         exit(1);
@@ -54,10 +55,10 @@ void render(Scene scene, int sphere_count, Vector3 light_direction, Color light,
             ray.direction = normalize((Vector3){u, v, -1.0f});
             float t;
             Sphere sphere;
-            if(intersect_ray_spheres(ray, scene.spheres, sphere_count, &t, &sphere)) {
+            if(intersect_ray_spheres(ray, spheres, sphere_count, &t, &sphere)) {
                 Vector3 intersection = add(ray.origin, scale(ray.direction, t));
                 Vector3 normal = normalize(sub(intersection, sphere.center));
-                Color color = shade(sphere, intersection, normal, light_direction, light, object, ambient);
+                Color color = shade(sphere, intersection, normal, light_direction, light, sphere.color, ambient);
                 image[y * width + x] = color;
             } else {
                 image[y * width + x] = (Color) {0.5294f, 0.8078f, 0.9216f};
@@ -65,6 +66,7 @@ void render(Scene scene, int sphere_count, Vector3 light_direction, Color light,
             
         }
     }
+    
     save_ppm_format(image, width, height, "nonfxaa.ppm");
     if(ANTIALIASING) {
         printf("Applying anti-aliasing...\n");
